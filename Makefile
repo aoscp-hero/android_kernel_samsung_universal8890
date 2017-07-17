@@ -621,6 +621,9 @@ endif
 
 KBUILD_CFLAGS	+= -mtune=exynos-m1
 
+# Disallow introduction of unaligned stores
+KBUILD_CFLAGS	+= $(call cc-option,--param=store-merging-allow-unaligned=0)
+
 # Tell gcc to never replace conditional load with a non-conditional one
 KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
 
