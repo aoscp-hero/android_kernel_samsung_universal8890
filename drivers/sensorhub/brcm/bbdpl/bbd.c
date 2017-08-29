@@ -133,8 +133,10 @@ static struct bbd_device bbd;
  */
 static unsigned char bbd_patch[] =
 {
-#if defined (CONFIG_SENSORS_SSP_LUCKY)
-	#include "n_os/bbd_patch_file_lucky.h"
+#if defined (CONFIG_SENSORS_SSP_GRACE)
+	#include "bbd_patch_file_grace.h"
+#elif defined (CONFIG_SENSORS_SSP_LUCKY)
+	#include "bbd_patch_file_lucky.h"
 #endif
 };
 
