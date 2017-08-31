@@ -81,3 +81,4 @@ obj-$(CONFIG_TOUCHSCREEN_TPS6507X)	+= tps6507x-ts.o
 obj-$(CONFIG_TOUCHSCREEN_ZFORCE)	+= zforce_ts.o
 obj-$(CONFIG_TOUCHSCREEN_SEC_TS)	+= sec_ts/
 obj-$(CONFIG_TOUCHSCREEN_FTS7)		+= stm/fts7/
+obj-$(CONFIG_TOUCHSCREEN_MMS100S)		+= melfas/mms100s/
