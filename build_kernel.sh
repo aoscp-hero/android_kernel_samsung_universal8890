@@ -20,11 +20,12 @@ DTBTOOL=$KERNEL_DTBTOOL
 FUNC_GENERATE_DEFCONFIG()
 {
 	echo ""
-        echo "=============================================="
-        echo "START : FUNC_GENERATE_DEFCONFIG"
-        echo "=============================================="
-        echo "build config="$KERNEL_DEFCONFIG ""
-        echo ""
+	echo "=============================================="
+	echo "START : FUNC_GENERATE_DEFCONFIG"
+	echo "=============================================="
+	echo ""
+	echo "Build config: $KERNEL_DEFCONFIG"
+	echo ""
 
 	make -C $BUILD_KERNEL_DIR O=$BUILD_KERNEL_OUT_DIR -j$BUILD_JOB_NUMBER ARCH=arm64 \
 			CROSS_COMPILE=$BUILD_CROSS_COMPILE \
@@ -42,14 +43,16 @@ FUNC_GENERATE_DEFCONFIG()
 FUNC_GENERATE_DTB()
 {
 	echo ""
-        echo "=============================================="
-        echo "START : FUNC_GENERATE_DTB"
-        echo "=============================================="
-        echo ""
+	echo "=============================================="
+	echo "START : FUNC_GENERATE_DTB"
+	echo "=============================================="
+	echo ""
+
 	rm -rf $BUILD_KERNEL_OUT_DIR/arch/arm64/boot/dts
 
 	make dtbs -C $BUILD_KERNEL_DIR O=$BUILD_KERNEL_OUT_DIR -j$BUILD_JOB_NUMBER ARCH=arm64 \
 			CROSS_COMPILE=$BUILD_CROSS_COMPILE || exit -1
+
 	echo ""
 	echo "================================="
 	echo "END   : FUNC_GENERATE_DTB"
@@ -64,21 +67,24 @@ FUNC_BUILD_KERNEL()
 	echo "START   : FUNC_BUILD_KERNEL"
 	echo "================================="
 	echo ""
+
 	rm $KERNEL_IMG $BUILD_KERNEL_OUT_DIR/arch/arm64/boot/Image
 	rm -rf $BUILD_KERNEL_OUT_DIR/arch/arm64/boot/dts
 
-if [ "$USE_CCACHE" ]
-then
-	make -C $BUILD_KERNEL_DIR O=$BUILD_KERNEL_OUT_DIR -j$BUILD_JOB_NUMBER ARCH=arm64 \
-			CROSS_COMPILE=$BUILD_CROSS_COMPILE \
-			CC="ccache "$BUILD_CROSS_COMPILE"gcc" CPP="ccache "$BUILD_CROSS_COMPILE"gcc -E" || exit -1
-else
-	make -C $BUILD_KERNEL_DIR O=$BUILD_KERNEL_OUT_DIR -j$BUILD_JOB_NUMBER ARCH=arm64 \
-			CROSS_COMPILE=$BUILD_CROSS_COMPILE || exit -1
-fi
+	if [ "$USE_CCACHE" ]
+	then
+		make -C $BUILD_KERNEL_DIR O=$BUILD_KERNEL_OUT_DIR -j$BUILD_JOB_NUMBER ARCH=arm64 \
+				CROSS_COMPILE=$BUILD_CROSS_COMPILE \
+				CC="ccache "$BUILD_CROSS_COMPILE"gcc" CPP="ccache "$BUILD_CROSS_COMPILE"gcc -E" || exit -1
+	else
+		make -C $BUILD_KERNEL_DIR O=$BUILD_KERNEL_OUT_DIR -j$BUILD_JOB_NUMBER ARCH=arm64 \
+				CROSS_COMPILE=$BUILD_CROSS_COMPILE || exit -1
+	fi
 
 	cp $BUILD_KERNEL_OUT_DIR/arch/arm64/boot/Image $KERNEL_IMG
+
 	echo "Made Kernel image: $KERNEL_IMG"
+	echo ""
 	echo "================================="
 	echo "END   : FUNC_BUILD_KERNEL"
 	echo "================================="
@@ -91,11 +97,16 @@ FUNC_GENERATE_DTIMG()
 	echo "================================="
 	echo "START   : FUNC_GENERATE_DTIMG"
 	echo "================================="
+	echo ""
+
 	rm $DTIMG
 	$DTBTOOL -o $DTIMG -s 2048 -p $BUILD_KERNEL_OUT_DIR/scripts/dtc/ $BUILD_KERNEL_OUT_DIR/arch/arm64/boot/dts
-	if [ -f "$DTIMG" ]; then
+	if [ -f "$DTIMG" ]
+	then
 		echo "Made DT image: $DTIMG"
 	fi
+
+	echo ""
 	echo "================================="
 	echo "END   : FUNC_GENERATE_DTIMG"
 	echo "================================="
@@ -121,6 +132,7 @@ FUNC_GENERATE_DTIMG()
     echo "Total compile time is $ELAPSED_TIME seconds"
 ) 2>&1
 
-if [ ! -f "$KERNEL_IMG" ]; then
+if [ ! -f "$KERNEL_IMG" ]
+then
   exit -1
 fi
