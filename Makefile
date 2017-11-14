@@ -619,7 +619,8 @@ else
 KBUILD_CFLAGS	+= -Ofast
 endif
 
-KBUILD_CFLAGS	+= -mtune=exynos-m1
+# Architecture-specific tunes for Exynos 8890
+KBUILD_CFLAGS	+= $(call cc-option,-mtune=exynos-m1)
 
 # Disallow introduction of unaligned stores
 KBUILD_CFLAGS	+= $(call cc-option,--param=store-merging-allow-unaligned=0)
